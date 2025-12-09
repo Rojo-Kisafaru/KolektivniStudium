@@ -346,65 +346,47 @@
         <p class="lead">
           Vyplňte jednoduchý formulář a brzy Vás zkontaktujeme.
         </p>
-        <form
-          action="https://formsubmit.co/robinjos.vlcr@gmail.com"
-          method="POST"
-          id="signupForm"
-        >
-          <div style="display: flex; gap: 8px; flex-wrap: wrap">
-            <input
-              required
-              placeholder="Jméno a příjmení"
-              id="name"
-              name="name"
-              style="
-                flex: 1;
-                padding: 10px;
-                border-radius: 6px;
-                border: 1px solid #dfeff8;
-              "
-            />
-            <input
-              required
-              placeholder="E-mail nebo telefon"
-              id="contact"
-              name="e-mail"
-              style="
-                flex: 1;
-                padding: 10px;
-                border-radius: 6px;
-                border: 1px solid #dfeff8;
-              "
-            />
-          </div>
-          <div
-            style="
-              margin-top: 10px;
-              display: flex;
-              gap: 8px;
-              align-items: center;
-            "
-          >
-            <label style="font-size: 14px"
-              ><input type="checkbox" id="wantRohlik" checked /> Potvrzuji
-              platbu 1 rohlík / doučování</label
-            >
-            <button
-              type="submit"
-              style="
-                margin-left: auto;
-                background: var(--accent);
-                color: white;
-                padding: 10px 14px;
-                border-radius: 8px;
-                border: 0;
-                cursor: pointer;
-              "
-            >
-              Odeslat
-            </button>
-          </div>
-        </form>
+       <form action="https://formsubmit.co/robinjos.vlcr@gmail.com" method="POST" id="signupForm">
+  
+  <!-- Anti-spam -->
+  <input type="text" name="_honey" style="display:none">
+
+  <!-- Zakázat přesměrování -->
+  <input type="hidden" name="_redirect" value="false">
+
+  <div style="display: flex; gap: 8px; flex-wrap: wrap">
+    <input
+      required
+      placeholder="Jméno a příjmení"
+      id="name"
+      name="name"
+      style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #dfeff8;"
+    />
+
+    <input
+      required
+      placeholder="E-mail nebo telefon"
+      id="contact"
+      name="contact"
+      style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #dfeff8;"
+    />
+  </div>
+
+  <div style="margin-top: 10px; display: flex; gap: 8px; align-items: center;">
+    <label style="font-size: 14px">
+      <input type="checkbox" id="wantRohlik" checked>
+      Potvrzuji platbu 1 rohlík / doučování
+    </label>
+
+    <button
+      type="submit"
+      style="margin-left: auto; background: var(--accent); color: white; padding: 10px 14px; border-radius: 8px; border: 0; cursor: pointer;"
+    >
+      Odeslat
+    </button>
+  </div>
+</form>
+
       </section>
 
       <section>
@@ -573,6 +555,7 @@
     </script>
   </body>
 </html>
+
 
 
 
