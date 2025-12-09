@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Kolektivní Studium — VLČR</title>
+    <style>
+      :root {
+        --accent: #003366;
+        --accent-2: #00a3cc;
+        --bg: #f7feff;
+        --ad-bg: #fffae6;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        font-family: Inter, Roboto, Arial, sans-serif;
+        background: var(--bg);
+        color: #222;
+      }
+      header {
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        color: white;
+        padding: 28px 20px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+      header img {
+        width: 84px;
+        height: 84px;
+        object-fit: contain;
+        border-radius: 12px;
+        background: white;
+        padding: 6px;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 28px;
+        letter-spacing: 1px;
+      }
+      header p {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 14px;
+      }
+      main {
+        max-width: 980px;
+        margin: 28px auto;
+        padding: 16px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(2, 20, 40, 0.06);
+        position: relative;
+        overflow: hidden;
+      }
+      section {
+        margin-bottom: 20px;
+      }
+      h2 {
+        color: var(--accent);
+        margin-bottom: 8px;
+      }
+      .lead {
+        font-size: 16px;
+        line-height: 1.6;
+      }
+      .services {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 12px;
+        margin-top: 12px;
+      }
+      .card {
+        border: 1px solid #e6f5fb;
+        padding: 12px;
+        border-radius: 8px;
+        background: linear-gradient(180deg, #ffffff, #f3fbff);
+      }
+      .price {
+        font-weight: 700;
+        color: var(--accent);
+        font-size: 20px;
+      }
+      footer {
+        padding: 18px;
+        text-align: center;
+        color: #555;
+        font-size: 14px;
+      }
+
+      /* Reklamní prvky */
+      .sticky-ad-top,
+      .sticky-ad-bottom {
+        position: fixed;
+        left: 0;
+        right: 0;
+        padding: 10px 16px;
+        background: var(--ad-bg);
+        border: 3px solid #ffd27a;
+        z-index: 990;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+      }
+      .sticky-ad-top {
+        top: 0;
+        border-radius: 0 0 8px 8px;
+      }
+      .sticky-ad-bottom {
+        bottom: 0;
+        border-radius: 8px 8px 0 0;
+      }
+      .ad-cta {
+        background: #ff7a00;
+        color: white;
+        border: none;
+        padding: 10px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+      .ad-close {
+        background: transparent;
+        border: 0;
+        font-size: 14px;
+        cursor: pointer;
+        color: #444;
+      }
+
+      /* Modal overlay reklama */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        backdrop-filter: blur(2px);
+      }
+      .modal {
+        width: min(720px, 92%);
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        text-align: center;
+        position: relative;
+      }
+      .modal h3 {
+        margin-top: 0;
+        color: var(--accent);
+      }
+      .modal p {
+        line-height: 1.6;
+      }
+      .modal .big-cta {
+        display: inline-block;
+        margin-top: 14px;
+        padding: 12px 18px;
+        border-radius: 8px;
+        background: var(--accent);
+        color: #fff;
+        font-weight: 700;
+        border: 0;
+        cursor: pointer;
+      }
+      .modal .close-small {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border: 0;
+        background: transparent;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      /* Obnovení reklamy: po zavření se znovu objeví */
+      .disabled-pointer {
+        pointer-events: none;
+        user-select: none;
+        opacity: 0.85;
+      }
+      /* Ztíží dočtení: automatické přeskočení textu */
+      .jump-to-top {
+        animation: jump 0.5s ease;
+      }
+      @keyframes jump {
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(-6px);
+        }
+      }
+
+      /* malé otravniny */
+      .annoying-chip {
+        position: fixed;
+        right: 18px;
+        bottom: 120px;
+        background: linear-gradient(180deg, #fff6f0, #fff0e0);
+        padding: 10px 12px;
+        border-radius: 999px;
+        border: 2px solid #ffd1b3;
+        z-index: 995;
+        cursor: pointer;
+      }
+      .marquee-ad {
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        border-top: 1px dashed #eee;
+        padding: 8px 0;
+        margin-top: 12px;
+      }
+      .marquee-ad span {
+        display: inline-block;
+        padding-right: 40px;
+        animation: marq 12s linear infinite;
+      }
+      @keyframes marq {
+        0% {
+          transform: translateX(100%);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
+      }
+
+      /* responziv */
+      @media (max-width: 640px) {
+        header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        header img {
+          width: 60px;
+          height: 60px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Lepkavé bannery -->
+    <div class="sticky-ad-top" id="topAd">
+      <div style="display: flex; align-items: center; gap: 12px">
+        <strong>REKLAMA: Kolektivní Studium VLČR</strong>
+        <small>— Zlepšete výsledky za 1 rohlík / doučování</small>
+      </div>
+      <div>
+        <button class="ad-cta" onclick="openSignupFromAd()">
+          Zarezervovat teď
+        </button>
+        <button class="ad-close" onclick="closeTopAd()">Skrýt (dočasně)</button>
+      </div>
+    </div>
+
+    <div class="sticky-ad-bottom" id="bottomAd">
+      <div style="display: flex; align-items: center; gap: 12px">
+        <strong>NEPŘEHLÉDNĚTE!</strong>
+        <small>Kolektivní Studium — skupinová podpora pro každého.</small>
+      </div>
+      <div>
+        <button class="ad-cta" onclick="openSignupFromAd()">
+          Chci rohlík = chci doučování
+        </button>
+        <button class="ad-close" onclick="closeBottomAd()">
+          Skrýt (dočasně)
+        </button>
+      </div>
+    </div>
+
+    <header>
+      <img src="ks.png.jpg" alt="VLČR logo" />
+      <div>
+        <h1>Kolektivní Studium — VLČR</h1>
+        <p>Vzdělaný Lid České Republiky — skupinová doučovací iniciativa</p>
+      </div>
+    </header>
+
+    <main id="mainContent">
+      <section>
+        <h2>O nás</h2>
+        <p class="lead">
+          Kolektivní Studium je služba organizovaná VLČR. Pomáháme studentům
+          zlepšit znalosti v různých předmětech nebo přípravou na zkoušky
+          prostřednictvím doučování v malých skupinkách. Naše principy:
+          dostupnost, kolektivní podpora a jednoduchá výměna — 1 doučování = 1
+          rohlík (nebo alternativní pečivo dle domluvy).
+        </p>
+        <div class="marquee-ad" aria-hidden="true">
+          <span
+            >➡️ Akce: 1 doučování = 1 rohlík • Přihlaste se hned! • Kolektivní
+            Studium VLČR</span
+          >
+        </div>
+      </section>
+
+      <section>
+        <h2>Naše služby</h2>
+        <div class="services">
+          <div class="card">
+            <h3>Osobní doučování</h3>
+            <p>
+              Efektivní personalizované doučování na vybranou látku. Výhoda menšího počtu lidí.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Kolektivní doučování</h3>
+            <p>
+              Doučování více lidí na vybraná témata - po domluvě bude vybrán nejvhodnější lektor. Možnost doučování pro více lidí zároveň.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Kolektivní studium</h3>
+            <p>
+              Chtěli byste studovat společně s ostatními nadšenci do Vaší oblasti nebo tématu? Kolektivní studium je tu pro Vás - vzájemná podpora účastníků a možnost předat si cenné zkušenosti nebo najít vhodné kontakty - to je naše Kolektivní studium.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="pricing">
+        <h2>Ceník</h2>
+        <p class="lead">
+          Cena je záměrně jednoduchá a symbolická — aby služba byla přístupná
+          všem.
+        </p>
+        <div class="card" style="margin-top: 10px">
+          <p class="price">
+            1 doučování = <strong>1 rohlík</strong> (nebo alternativní pečivo)
+          </p>
+          <p>
+            Preferované platby: výměna osobně nebo dodání rohlíku online.
+          </p>
+        </div>
+      </section>
+
+      <section id="signup">
+        <h2>Přihlaste se</h2>
+        <p class="lead">
+          Vyplňte jednoduchý formulář a brzy Vás zkontaktujeme.
+        </p>
+        <form
+            action="https://formsubmit.co/robinjos.vlcr@gmail.com"
+            method="POST"
+          >
+        <form id="signupForm" onsubmit="return submitForm(event)">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap">
+            <input
+              required
+              placeholder="Jméno a příjmení"
+              id="name"
+              style="
+                flex: 1;
+                padding: 10px;
+                border-radius: 6px;
+                border: 1px solid #dfeff8;
+              "
+            />
+            <input
+              required
+              placeholder="E-mail nebo telefon"
+              id="contact"
+              style="
+                flex: 1;
+                padding: 10px;
+                border-radius: 6px;
+                border: 1px solid #dfeff8;
+              "
+            />
+          </div>
+          <div
+            style="
+              margin-top: 10px;
+              display: flex;
+              gap: 8px;
+              align-items: center;
+            "
+          >
+            <label style="font-size: 14px"
+              ><input type="checkbox" id="wantRohlik" checked /> Potvrzuji
+              platbu 1 rohlík / doučování</label
+            >
+            <button
+              type="submit"
+              style="
+                margin-left: auto;
+                background: var(--accent);
+                color: white;
+                padding: 10px 14px;
+                border-radius: 8px;
+                border: 0;
+                cursor: pointer;
+              "
+            >
+              Odeslat
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section>
+        <h2>Kontakt</h2>
+        <p>
+          E-mail: <strong>robinjos.vlcr@gmail.com</strong> — Telefon:
+          <strong>+420 777 111 222</strong>
+        </p>
+      </section>
+    </main>
+
+    <button
+      class="annoying-chip"
+      id="chip"
+      title="Přihlásit se rychle"
+      onclick="openSignupFromAd()"
+    >
+      CHCI STUDOVAT!
+    </button>
+
+    <footer>
+      <small
+        >© VLČR — Vzdělaný Lid České Republiky. Všeobecné podmínky a pravidla
+        skupiny jsou k dispozici na vyžádání.</small
+      >
+    </footer>
+
+    <!-- Modal overlay (reklama) -->
+    <div id="modalOverlay" class="overlay" style="display: none">
+      <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+      >
+        <button class="close-small" onclick="closeModal()" aria-label="Zavřít">
+          ✕
+        </button>
+        <h3 id="modalTitle">EXKLUZIVNÍ NABÍDKA — Kolektivní Studium</h3>
+        <p>
+          Chcete rychlé zlepšení? Přihlaste se do skupinového sezení ještě dnes.
+          Jedna lekce = 1 rohlík. Počet míst omezen.
+        </p>
+        <button class="big-cta" onclick="openSignupFromAd()">
+          Rezervovat místo
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // --- Reklamní logika (opravdu agresivní podle zadání) ---
+      const modal = document.getElementById("modalOverlay");
+      const topAd = document.getElementById("topAd");
+      const bottomAd = document.getElementById("bottomAd");
+      const mainContent = document.getElementById("mainContent");
+
+      let modalTimer = null;
+      let reopenTimer = null;
+
+      function showModal() {
+        modal.style.display = "flex";
+        // znemožnit interakci s hlavním obsahem (dle zadání má být rušivé)
+        mainContent.classList.add("disabled-pointer", "jump-to-top");
+        // window.scrollTo({ top: 0, behavior: "smooth" });
+        // po chvilce stáhnout jump efekt
+        setTimeout(() => mainContent.classList.remove("jump-to-top"), 600);
+      }
+      function closeModal() {
+        modal.style.display = "none";
+        mainContent.classList.remove("disabled-pointer");
+        // zase se reklama znovu otevře po krátkém čase
+        scheduleReopen(6000);
+      }
+
+      function scheduleModalLoop() {
+        // první popup po 2s
+        modalTimer = setTimeout(function loop() {
+          showModal();
+          // opakuj každých 10s pokud modal zavřou
+          modalTimer = setTimeout(loop, 10000);
+        }, 7417);
+      }
+
+      function scheduleReopen(ms) {
+        if (reopenTimer) clearTimeout(reopenTimer);
+        reopenTimer = setTimeout(() => {
+          showModal();
+        }, ms);
+      }
+
+      function closeTopAd() {
+        topAd.style.display = "none";
+        // znovu zobrazit po chvíli
+        setTimeout(() => {
+          topAd.style.display = "flex";
+        }, 7000);
+      }
+      function closeBottomAd() {
+        bottomAd.style.display = "none";
+        setTimeout(() => {
+          bottomAd.style.display = "flex";
+        }, 7000);
+      }
+
+      // Mírně otravná notifikace (čip)
+      const chip = document.getElementById("chip");
+      setInterval(() => {
+        chip.animate(
+          [
+            { transform: "translateY(0)" },
+            { transform: "translateY(-6px)" },
+            { transform: "translateY(0)" },
+          ],
+          { duration: 900, iterations: 1 }
+        );
+      }, 4200);
+
+      function openSignupFromAd() {
+        // přejdi na formulář a otevři ještě modal
+        document.getElementById("name").focus();
+        // ještě jednou modal pro efekt
+        showModal();
+      }
+
+      // simulace odeslání formuláře
+      function submitForm(e) {
+        e.preventDefault();
+        const name = document.getElementById("name").value.trim();
+        const contact = document.getElementById("contact").value.trim();
+        alert(
+          "Děkujeme, " +
+            (name || "zájemče") +
+            ". Vaše přihláška byla zaregistrována. Potvrzení obdržíte brzy. (Platba: 1 rohlík)"
+        );
+        // po odeslání reklama zesílí — ještě více překryvů
+        showModal();
+        // neumožňujeme uživatele "dočíst" : znovu spouštíme horní ad
+        topAd.style.display = "flex";
+        bottomAd.style.display = "flex";
+        return false;
+      }
+
+      // Neustálé připomínání: každých 9 sekund spustit modal pokud není zobrazen
+      setInterval(() => {
+        if (modal.style.display === "none" || modal.style.display === "") {
+          showModal();
+          setTimeout(() => {
+            closeModal();
+          }, 3000);
+        }
+      }, 9000);
+
+      // Start loop při načtení
+      window.addEventListener("load", () => {
+        scheduleModalLoop();
+      });
+
+      // Drobnost: zabránit snadnému označování textu (je to iritující)
+      document.addEventListener(
+        "selectstart",
+        function (e) {
+          /* povolíme výběr */
+        },
+        false
+      );
+    </script>
+  </body>
+</html>
